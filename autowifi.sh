@@ -1,13 +1,13 @@
 echo "AutoWIFI"
 echo "WELCOME . . . . "
-$AP=""
-$VIC=""
-$MAC=""
-$essid=""
-$type=""
-$attack=""
-$channel=""
-$interface="wlan0"
+AP=""
+VIC=""
+MAC=""
+essid=""
+type=""
+attack=""
+channel=""
+interface="wlan0"
 
 
 
