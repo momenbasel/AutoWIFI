@@ -1,5 +1,9 @@
 # AutoWIFI
 
+[![PyPI version](https://img.shields.io/pypi/v/autowifi.svg)](https://pypi.org/project/autowifi/)
+[![Python](https://img.shields.io/pypi/pyversions/autowifi.svg)](https://pypi.org/project/autowifi/)
+[![License](https://img.shields.io/pypi/l/autowifi.svg)](https://github.com/momenbasel/AutoWIFI/blob/main/LICENSE)
+
 Wireless penetration testing framework built for security professionals. Automates the full attack chain - from reconnaissance through exploitation - with a clean terminal interface.
 
 ## Features
@@ -23,11 +27,33 @@ Wireless penetration testing framework built for security professionals. Automat
 
 ## Installation
 
-### From PyPI
+### From PyPI (recommended)
 
 ```bash
 pip install autowifi
 ```
+
+### Install system dependencies
+
+The framework wraps the aircrack-ng suite and related tools. Install them for your distro:
+
+**Debian / Ubuntu / Kali:**
+```bash
+sudo apt update
+sudo apt install -y aircrack-ng reaver bully hcxdumptool hcxtools hashcat macchanger mdk4 tshark
+```
+
+**Arch Linux:**
+```bash
+sudo pacman -S aircrack-ng reaver hashcat hcxdumptool hcxtools macchanger wireshark-cli
+```
+
+**Fedora:**
+```bash
+sudo dnf install aircrack-ng reaver hashcat hcxdumptool hcxtools macchanger wireshark-cli
+```
+
+Only `aircrack-ng` is strictly required. The rest unlock additional attack vectors (WPS, PMKID, GPU cracking, etc.).
 
 ### From source
 
@@ -43,6 +69,12 @@ pip install .
 git clone https://github.com/momenbasel/AutoWIFI.git
 cd AutoWIFI
 pip install -e .
+```
+
+### Verify installation
+
+```bash
+sudo autowifi --version
 ```
 
 ## Usage
