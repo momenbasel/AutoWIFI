@@ -23,15 +23,25 @@ Wireless penetration testing framework built for security professionals. Automat
 
 ## Installation
 
+### From PyPI
+
+```bash
+pip install autowifi
+```
+
+### From source
+
 ```bash
 git clone https://github.com/momenbasel/AutoWIFI.git
 cd AutoWIFI
 pip install .
 ```
 
-Or install in development mode:
+### Development
 
 ```bash
+git clone https://github.com/momenbasel/AutoWIFI.git
+cd AutoWIFI
 pip install -e .
 ```
 
