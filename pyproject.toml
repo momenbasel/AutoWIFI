@@ -23,8 +23,12 @@ dependencies = [
     "click>=8.0",
 ]
 
+[project.optional-dependencies]
+mcp = ["mcp>=1.0"]
+
 [project.scripts]
 autowifi = "autowifi.cli:main"
+autowifi-mcp = "autowifi.mcp_server:main"
 
 [project.urls]
 Homepage = "https://github.com/momenbasel/AutoWIFI"

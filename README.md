@@ -85,6 +85,64 @@ pip install -e .
 sudo autowifi --version
 ```
 
+## MCP Server (AI Agent Integration)
+
+AutoWIFI includes an MCP (Model Context Protocol) server, making all wireless pentesting tools available to AI coding assistants like **Claude Code**, **Codex**, **Gemini**, and **Cursor**.
+
+### Install with MCP support
+
+```bash
+pip install autowifi[mcp]
+```
+
+### Configure for Claude Code
+
+Add to `~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "autowifi": {
+      "command": "autowifi-mcp"
+    }
+  }
+}
+```
+
+### Configure for Cursor
+
+Add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "autowifi": {
+      "command": "autowifi-mcp"
+    }
+  }
+}
+```
+
+### Available MCP tools
+
+| Tool | Description |
+|------|-------------|
+| `list_interfaces` | List wireless interfaces with mode/driver/chipset |
+| `enable_monitor` | Enable monitor mode on an interface |
+| `disable_monitor` | Restore interface to managed mode |
+| `scan_networks` | Discover WiFi networks with encryption, signal, WPS, clients |
+| `get_recommended_attacks` | Get attack vectors for a target based on encryption |
+| `capture_handshake` | Capture WPA/WPA2 4-way handshake |
+| `capture_pmkid` | Capture PMKID hash (clientless) |
+| `wps_pixie_dust` | Run WPS Pixie Dust offline attack |
+| `deauth` | Send deauthentication frames |
+| `crack_handshake` | Crack handshake/PMKID with aircrack/hashcat/john |
+| `verify_handshake` | Validate a capture file |
+| `find_wordlists` | Discover installed wordlists |
+| `check_dependencies` | Check installed tools |
+
+Now your AI agent can run wireless pentests autonomously.
+
 ## Usage
 
 ### Interactive mode
