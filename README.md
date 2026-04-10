@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner.png" alt="AutoWIFI" width="800">
+  <img src="docs/banner.png?v=2" alt="AutoWIFI" width="800">
 </p>
 
 <p align="center">
