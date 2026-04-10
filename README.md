@@ -1,10 +1,18 @@
-# AutoWIFI
+<p align="center">
+  <img src="docs/banner.png" alt="AutoWIFI" width="800">
+</p>
 
-[![PyPI version](https://img.shields.io/pypi/v/autowifi.svg)](https://pypi.org/project/autowifi/)
-[![Python](https://img.shields.io/pypi/pyversions/autowifi.svg)](https://pypi.org/project/autowifi/)
-[![License](https://img.shields.io/pypi/l/autowifi.svg)](https://github.com/momenbasel/AutoWIFI/blob/main/LICENSE)
+<p align="center">
+  <strong>Wireless penetration testing framework.</strong><br>
+  Automates the full attack chain - recon through exploitation - with a clean terminal interface.
+</p>
 
-Wireless penetration testing framework built for security professionals. Automates the full attack chain - from reconnaissance through exploitation - with a clean terminal interface.
+<p align="center">
+  <a href="https://pypi.org/project/autowifi/"><img src="https://img.shields.io/pypi/v/autowifi.svg" alt="PyPI"></a>
+  <a href="https://pypi.org/project/autowifi/"><img src="https://img.shields.io/pypi/pyversions/autowifi.svg" alt="Python"></a>
+  <a href="https://github.com/momenbasel/AutoWIFI/blob/main/LICENSE"><img src="https://img.shields.io/pypi/l/autowifi.svg" alt="License"></a>
+  <a href="https://github.com/momenbasel/AutoWIFI/stargazers"><img src="https://img.shields.io/github/stars/momenbasel/AutoWIFI?style=social" alt="Stars"></a>
+</p>
 
 ## Features
 
