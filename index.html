@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoWIFI - Wireless Penetration Testing Framework</title>
+  <meta name="description" content="Automate WPA/WPA2/WEP/WPS attacks from reconnaissance to exploitation in one command. Multi-vector wireless penetration testing framework with aircrack-ng, hashcat, and PMKID support.">
+  <meta name="keywords" content="wifi hacking, wireless security testing, aircrack-ng automation, wpa2 cracking, pmkid attack, wep cracking, wps pixie dust, penetration testing, wireless pentesting, handshake capture, deauth attack, hashcat wifi, kali linux tools, wifi security audit, wireless attack framework, python security tool, mcp server, wifi recon, monitor mode, mac randomization">
+  <meta name="author" content="Moamen Basel">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://momenbasel.github.io/AutoWIFI/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="AutoWIFI - Wireless Penetration Testing Framework">
+  <meta property="og:description" content="Automate WPA/WPA2/WEP/WPS attacks from recon to exploitation. 7 attack vectors, 3 cracking backends, one command.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://momenbasel.github.io/AutoWIFI/">
+  <meta property="og:image" content="https://raw.githubusercontent.com/momenbasel/AutoWIFI/main/docs/social-preview.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AutoWIFI - Wireless Penetration Testing Framework">
+  <meta name="twitter:description" content="Automate WPA/WPA2/WEP/WPS attacks from recon to exploitation. 7 attack vectors, 3 cracking backends, one command.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/momenbasel/AutoWIFI/main/docs/social-preview.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/momenbasel/AutoWIFI/main/docs/logo.png">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AutoWIFI",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "Linux",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Wireless penetration testing framework. Automates WPA/WPA2/WEP/WPS attacks from reconnaissance to exploitation in one command with aircrack-ng, hashcat, and PMKID support.",
+    "url": "https://momenbasel.github.io/AutoWIFI/",
+    "downloadUrl": "https://pypi.org/project/autowifi/",
+    "softwareVersion": "1.0",
+    "author": { "@type": "Person", "name": "Moamen Basel", "url": "https://github.com/momenbasel" },
+    "license": "https://opensource.org/licenses/GPL-3.0",
+    "programmingLanguage": "Python"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --bg-card: #111827;
+      --bg-code: #0d1520;
+      --border: #1e293b;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #f97316;
+      --accent-glow: rgba(249, 115, 22, 0.15);
+      --accent-secondary: #ef4444;
+      --accent-secondary-glow: rgba(239, 68, 68, 0.15);
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --purple: #a78bfa;
+      --pink: #f472b6;
+      --red: #ef4444;
+      --cyan: #22d3ee;
+      --radius: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+    a:hover { opacity: 0.85; }
+
+    code, pre {
+      font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(10, 14, 23, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 1.1rem; color: var(--text);
+    }
+    .nav-logo img { height: 28px; width: 28px; border-radius: 6px; }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a { color: var(--text-dim); font-size: 0.9rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links .btn-sm {
+      background: var(--accent);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .nav-links .btn-sm:hover { opacity: 0.9; }
+
+    /* ---- HERO ---- */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 120px 2rem 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40%; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -20%; right: -10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, var(--accent-secondary-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-content {
+      max-width: 800px;
+      text-align: center;
+      position: relative; z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+    }
+    .hero-badge span { color: var(--accent); font-weight: 600; }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-dim);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-actions {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { box-shadow: 0 0 30px var(--accent-glow); transform: translateY(-1px); color: #fff; }
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--text-muted); transform: translateY(-1px); }
+
+    .hero-install {
+      margin-top: 3rem;
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 24px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .hero-install:hover { border-color: var(--accent); }
+    .hero-install .prompt { color: var(--green); }
+    .hero-install code { color: var(--text); }
+    .hero-install .copy {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      padding-left: 12px;
+      border-left: 1px solid var(--border);
+    }
+
+    /* ---- TERMINAL DEMO ---- */
+    .terminal-section {
+      padding: 0 2rem 100px;
+    }
+    .terminal {
+      max-width: 780px;
+      margin: 0 auto;
+      background: #0c0c0c;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+    .terminal-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px;
+      background: #161616;
+      border-bottom: 1px solid #222;
+    }
+    .terminal-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .terminal-dot.r { background: #ff5f57; }
+    .terminal-dot.y { background: #febc2e; }
+    .terminal-dot.g { background: #28c840; }
+    .terminal-title {
+      flex: 1; text-align: center;
+      color: #666; font-size: 0.8rem; font-weight: 500;
+    }
+    .terminal-body {
+      padding: 20px 24px;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+    .terminal-body .line { white-space: pre; }
+    .t-prompt { color: var(--green); }
+    .t-cmd { color: #fff; }
+    .t-flag { color: var(--purple); }
+    .t-val { color: var(--yellow); }
+    .t-dim { color: #555; }
+    .t-info { color: var(--accent); }
+    .t-success { color: var(--green); }
+    .t-label { color: var(--text-muted); }
+    .t-warn { color: var(--red); }
+    .t-header { color: var(--accent); font-weight: 700; }
+    .t-sep { color: #333; }
+    .t-signal-high { color: var(--green); }
+    .t-signal-med { color: var(--yellow); }
+    .t-signal-low { color: var(--red); }
+
+    /* ---- SECTIONS ---- */
+    section {
+      padding: 100px 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-label {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin-bottom: 3rem;
+    }
+
+    /* ---- FEATURES GRID ---- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .feature-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .feature-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+    }
+    .feature-icon.orange { background: rgba(249, 115, 22, 0.12); color: var(--accent); }
+    .feature-icon.red { background: rgba(239, 68, 68, 0.12); color: var(--red); }
+    .feature-icon.green { background: rgba(52, 211, 153, 0.12); color: var(--green); }
+    .feature-icon.purple { background: rgba(167, 139, 250, 0.12); color: var(--purple); }
+    .feature-icon.yellow { background: rgba(251, 191, 36, 0.12); color: var(--yellow); }
+    .feature-icon.cyan { background: rgba(34, 211, 238, 0.12); color: var(--cyan); }
+    .feature-card h3 {
+      font-size: 1.05rem; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      color: var(--text-dim); font-size: 0.9rem; line-height: 1.6;
+    }
+
+    /* ---- ATTACK VECTORS TABLE ---- */
+    .attacks-table-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .attacks-table-wrap table { width: 100%; border-collapse: collapse; }
+    .attacks-table-wrap th {
+      text-align: left;
+      padding: 14px 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+    .attacks-table-wrap td {
+      padding: 14px 20px;
+      font-size: 0.88rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .attacks-table-wrap tr:last-child td { border-bottom: none; }
+    .attacks-table-wrap td:first-child {
+      color: var(--accent); font-weight: 600;
+    }
+    .attacks-table-wrap td:nth-child(2) { color: var(--text); }
+    .attacks-table-wrap td:last-child { color: var(--text-dim); }
+    .enc-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .enc-wep { background: rgba(239, 68, 68, 0.12); color: var(--red); }
+    .enc-wpa { background: rgba(249, 115, 22, 0.12); color: var(--accent); }
+    .enc-wps { background: rgba(251, 191, 36, 0.12); color: var(--yellow); }
+
+    /* ---- MCP SECTION ---- */
+    .mcp-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    .mcp-info h3 {
+      font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem;
+    }
+    .mcp-info p {
+      color: var(--text-dim); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.7;
+    }
+    .mcp-tools {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .mcp-tools table { width: 100%; border-collapse: collapse; }
+    .mcp-tools th {
+      text-align: left;
+      padding: 14px 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+    .mcp-tools td {
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .mcp-tools tr:last-child td { border-bottom: none; }
+    .mcp-tools td:first-child {
+      color: var(--accent); font-weight: 600;
+      font-family: 'SF Mono', monospace;
+      font-size: 0.8rem;
+    }
+    .mcp-tools td:last-child { color: var(--text-dim); }
+
+    /* ---- CODE BLOCK ---- */
+    .code-block {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .code-body {
+      padding: 20px 24px;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+    .code-body pre { white-space: pre; }
+    .c-kw { color: var(--purple); }
+    .c-fn { color: #7dd3fc; }
+    .c-str { color: var(--green); }
+    .c-com { color: var(--text-muted); }
+    .c-var { color: var(--text); }
+    .c-op { color: var(--text-dim); }
+
+    /* ---- CLI USAGE SECTION ---- */
+    .commands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.25rem;
+    }
+    .cmd-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .cmd-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .cmd-body {
+      padding: 18px 24px;
+    }
+    .cmd-line {
+      display: flex; gap: 8px;
+      padding: 5px 0;
+      font-size: 0.85rem;
+    }
+    .cmd-line code {
+      color: var(--text);
+    }
+    .cmd-line .desc {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    /* ---- STATS ---- */
+    .stats-row {
+      display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
+      margin-top: 4rem;
+    }
+    .stat {
+      text-align: center;
+      min-width: 140px;
+    }
+    .stat-val {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ---- CTA ---- */
+    .cta {
+      text-align: center;
+      padding: 100px 2rem;
+      position: relative;
+    }
+    .cta::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta h2 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+    .cta p {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      max-width: 500px;
+      margin: 0 auto 2rem;
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--text-dim); }
+    .footer-links {
+      display: flex; gap: 2rem; justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      .nav-links a:not(.btn-sm) { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .commands-grid { grid-template-columns: 1fr; }
+      .mcp-block { grid-template-columns: 1fr; }
+      section { padding: 60px 1.25rem; }
+      .attacks-table-wrap { overflow-x: auto; }
+      .attacks-table-wrap table { min-width: 540px; }
+    }
+
+    /* ---- ANIMATIONS ---- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate {
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .animate.d1 { animation-delay: 0.1s; }
+    .animate.d2 { animation-delay: 0.2s; }
+    .animate.d3 { animation-delay: 0.3s; }
+    .animate.d4 { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="https://raw.githubusercontent.com/momenbasel/AutoWIFI/main/docs/logo.png" alt="AutoWIFI">
+        AutoWIFI
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#attacks">Attacks</a>
+        <a href="#mcp">MCP</a>
+        <a href="#usage">Usage</a>
+        <a href="https://github.com/momenbasel/AutoWIFI" class="btn-sm">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="vertical-align:-2px;margin-right:4px;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge animate">
+        <span>v1.0</span> Full wireless attack chain
+      </div>
+      <h1 class="animate d1">
+        Wireless pentesting,<br>
+        <span class="gradient">automated.</span>
+      </h1>
+      <p class="animate d2">
+        WPA/WPA2, WEP, and WPS attacks from reconnaissance to cracking
+        in one command. Smart target selection, GPU acceleration, session recovery.
+      </p>
+      <div class="hero-actions animate d3">
+        <a href="https://pypi.org/project/autowifi/" class="btn btn-primary">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm3.5 9l-4 3a.5.5 0 01-.8-.4V4.4a.5.5 0 01.8-.4l4 3a.5.5 0 010 .8z"/></svg>
+          Install from PyPI
+        </a>
+        <a href="https://github.com/momenbasel/AutoWIFI" class="btn btn-secondary">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          View Source
+        </a>
+      </div>
+      <div class="hero-install animate d4" onclick="navigator.clipboard.writeText('pip install autowifi');" title="Click to copy">
+        <span class="prompt">$</span>
+        <code>pip install autowifi</code>
+        <span class="copy">click to copy</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMINAL DEMO -->
+  <div class="terminal-section">
+    <div class="terminal animate">
+      <div class="terminal-bar">
+        <div class="terminal-dot r"></div>
+        <div class="terminal-dot y"></div>
+        <div class="terminal-dot g"></div>
+        <div class="terminal-title">autowifi -- scan</div>
+      </div>
+      <div class="terminal-body">
+        <div class="line"><span class="t-prompt">#</span> <span class="t-cmd">sudo autowifi scan</span> <span class="t-flag">-i</span> <span class="t-val">wlan0mon</span> <span class="t-flag">-d</span> <span class="t-val">30</span></div>
+        <div class="line">&nbsp;</div>
+        <div class="line"><span class="t-info">[*]</span> <span class="t-dim">Starting scan on wlan0mon (30s)...</span></div>
+        <div class="line"><span class="t-info">[*]</span> <span class="t-dim">Channels: 1-13 (2.4 GHz) + 36-165 (5 GHz)</span></div>
+        <div class="line">&nbsp;</div>
+        <div class="line"><span class="t-header">  BSSID              CH  ENC       SIGNAL  ESSID</span></div>
+        <div class="line"><span class="t-sep">  ---------------------------------------------------------------------------</span></div>
+        <div class="line">  <span class="t-dim">A4:CF:12:8B:3E:01</span>   6  <span class="t-val">WPA2</span>      <span class="t-signal-high">||||||||</span><span class="t-dim">||</span>  <span class="t-cmd">CorpNet-5G</span></div>
+        <div class="line">  <span class="t-dim">00:1A:2B:3C:4D:5E</span>  11  <span class="t-val">WPA2</span>      <span class="t-signal-med">||||||</span><span class="t-dim">||||</span>  <span class="t-cmd">HomeRouter-2F</span></div>
+        <div class="line">  <span class="t-dim">F8:E4:3B:7A:22:10</span>   1  <span class="t-warn">WEP</span>       <span class="t-signal-med">|||||</span><span class="t-dim">|||||</span>  <span class="t-cmd">Legacy-Printer</span></div>
+        <div class="line">  <span class="t-dim">B0:6E:BF:44:A1:CC</span>   3  <span class="t-val">WPA2</span>/<span class="t-yellow">WPS</span>  <span class="t-signal-low">|||</span><span class="t-dim">|||||||</span>  <span class="t-cmd">CafeWiFi</span></div>
+        <div class="line">  <span class="t-dim">DC:9F:DB:11:F0:8A</span>  44  <span class="t-val">WPA2</span>      <span class="t-signal-high">|||||||||</span><span class="t-dim">|</span>  <span class="t-cmd">Lab-Secure</span></div>
+        <div class="line">&nbsp;</div>
+        <div class="line"><span class="t-success">[+]</span> <span class="t-cmd">Found 5 networks</span> <span class="t-dim">(3 WPA2, 1 WEP, 1 WPS)</span></div>
+        <div class="line"><span class="t-success">[+]</span> <span class="t-dim">Recommended: PMKID attack on CorpNet-5G (strong signal, WPA2)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Full attack chain in one toolkit</h2>
+    <p class="section-desc">From interface setup to cracked keys. Every step automated, every result logged.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon orange">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h3>Multi-Vector Attacks</h3>
+        <p>WEP (ARP replay, fragmentation, chopchop), WPA/WPA2 (handshake, PMKID), and WPS (pixie dust, PIN brute force) - all from one tool.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon red">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2m-9-11h2m18 0h2m-3.3-6.7l-1.4 1.4M5.7 18.3l-1.4 1.4m0-13.4l1.4 1.4m12.6 12.6l1.4 1.4"/></svg>
+        </div>
+        <h3>Smart Targeting</h3>
+        <p>Auto-recommends the best attack vector based on encryption type, signal strength, WPS status, and client activity.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <h3>Live Scanning</h3>
+        <p>Real-time network discovery with signal strength visualization, client enumeration, and channel hopping across 2.4 GHz and 5 GHz bands.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon yellow">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3m6-3v3M9 20v3m6-3v3M20 9h3m-3 6h3M1 9h3m-3 6h3"/></svg>
+        </div>
+        <h3>GPU Cracking</h3>
+        <p>Three cracking backends: aircrack-ng (CPU), hashcat (GPU-accelerated), and John the Ripper. Automatic wordlist detection.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon purple">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/><path d="M9 7h6M9 12h6M9 17h4"/></svg>
+        </div>
+        <h3>Session Management</h3>
+        <p>Save, restore, and resume attack sessions. Never lose progress - pick up exactly where you left off after interruptions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon cyan">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>MCP Server</h3>
+        <p>13-tool Model Context Protocol server. Let AI agents run wireless assessments - scan networks, capture handshakes, crack keys autonomously.</p>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-val">7</div>
+        <div class="stat-label">Attack Vectors</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">3</div>
+        <div class="stat-label">Cracking Backends</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">13</div>
+        <div class="stat-label">MCP Tools</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">3.9+</div>
+        <div class="stat-label">Python</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATTACK VECTORS -->
+  <section id="attacks">
+    <div class="section-label">Attack Vectors</div>
+    <h2 class="section-title">Seven attack paths, one framework</h2>
+    <p class="section-desc">Covers WEP, WPA/WPA2, and WPS with multiple techniques per encryption type.</p>
+    <div class="attacks-table-wrap">
+      <table>
+        <thead>
+          <tr><th>Attack</th><th>Encryption</th><th>Method</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ARP Replay</td>
+            <td><span class="enc-badge enc-wep">WEP</span></td>
+            <td>IV collection via ARP request replay</td>
+          </tr>
+          <tr>
+            <td>Fragmentation</td>
+            <td><span class="enc-badge enc-wep">WEP</span></td>
+            <td>Keystream recovery through fragmentation</td>
+          </tr>
+          <tr>
+            <td>ChopChop</td>
+            <td><span class="enc-badge enc-wep">WEP</span></td>
+            <td>KoreK chopchop keystream extraction</td>
+          </tr>
+          <tr>
+            <td>Handshake Capture</td>
+            <td><span class="enc-badge enc-wpa">WPA/WPA2</span></td>
+            <td>Deauth + 4-way handshake capture</td>
+          </tr>
+          <tr>
+            <td>PMKID</td>
+            <td><span class="enc-badge enc-wpa">WPA/WPA2</span></td>
+            <td>Clientless key extraction from AP</td>
+          </tr>
+          <tr>
+            <td>Pixie Dust</td>
+            <td><span class="enc-badge enc-wps">WPS</span></td>
+            <td>Offline WPS PIN recovery via pixie dust</td>
+          </tr>
+          <tr>
+            <td>PIN Brute Force</td>
+            <td><span class="enc-badge enc-wps">WPS</span></td>
+            <td>Online WPS PIN enumeration</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- MCP -->
+  <section id="mcp">
+    <div class="section-label">AI Integration</div>
+    <h2 class="section-title">MCP Server for AI agents</h2>
+    <p class="section-desc">Let Claude, Cursor, or any MCP-compatible agent run wireless assessments autonomously with 13 built-in tools.</p>
+    <div class="mcp-block">
+      <div class="mcp-info">
+        <h3>Drop-in MCP configuration</h3>
+        <p>
+          AutoWIFI ships a built-in Model Context Protocol server. Add it to your AI editor and your agent can
+          scan networks, capture handshakes, crack keys, and generate reports - zero human interaction required.
+        </p>
+        <div class="code-block">
+          <div class="code-header">claude_desktop_config.json</div>
+          <div class="code-body">
+<pre>{
+  <span class="c-str">"mcpServers"</span>: {
+    <span class="c-str">"autowifi"</span>: {
+      <span class="c-str">"command"</span>: <span class="c-str">"autowifi-mcp"</span>
+    }
+  }
+}</pre>
+          </div>
+        </div>
+      </div>
+      <div class="mcp-tools">
+        <table>
+          <thead>
+            <tr><th>Tool</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>list_interfaces</td><td>List wireless interfaces</td></tr>
+            <tr><td>enable_monitor</td><td>Enable monitor mode</td></tr>
+            <tr><td>disable_monitor</td><td>Disable monitor mode</td></tr>
+            <tr><td>scan_networks</td><td>Discover nearby networks</td></tr>
+            <tr><td>get_recommended_attacks</td><td>Get best attack vectors</td></tr>
+            <tr><td>capture_handshake</td><td>Capture WPA handshake</td></tr>
+            <tr><td>capture_pmkid</td><td>Capture PMKID hash</td></tr>
+            <tr><td>wps_pixie_dust</td><td>Run pixie dust attack</td></tr>
+            <tr><td>deauth</td><td>Deauthenticate clients</td></tr>
+            <tr><td>crack_handshake</td><td>Crack captured handshake</td></tr>
+            <tr><td>verify_handshake</td><td>Verify handshake file</td></tr>
+            <tr><td>find_wordlists</td><td>Locate wordlist files</td></tr>
+            <tr><td>check_dependencies</td><td>Verify tool dependencies</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLI USAGE -->
+  <section id="usage">
+    <div class="section-label">CLI Usage</div>
+    <h2 class="section-title">Command reference</h2>
+    <p class="section-desc">Scan, capture, and crack - each step is a single command with sensible defaults.</p>
+    <div class="commands-grid">
+      <div class="cmd-card">
+        <div class="cmd-header">Scan Networks</div>
+        <div class="cmd-body">
+          <div class="cmd-line"><code>sudo autowifi scan -i wlan0mon</code></div>
+          <div class="cmd-line"><code>sudo autowifi scan -i wlan0mon -d 60</code></div>
+          <div class="cmd-line"><code>sudo autowifi scan -i wlan0mon --band 5</code></div>
+        </div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-header">Capture Handshakes</div>
+        <div class="cmd-body">
+          <div class="cmd-line"><code>sudo autowifi capture -i wlan0mon -b AA:BB:CC:DD:EE:FF</code></div>
+          <div class="cmd-line"><code>sudo autowifi pmkid -i wlan0mon -b AA:BB:CC:DD:EE:FF</code></div>
+          <div class="cmd-line"><code>sudo autowifi deauth -i wlan0mon -b AA:BB:CC:DD:EE:FF</code></div>
+        </div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-header">Crack Keys</div>
+        <div class="cmd-body">
+          <div class="cmd-line"><code>autowifi crack -f capture.cap -w rockyou.txt</code></div>
+          <div class="cmd-line"><code>autowifi crack -f capture.cap --backend hashcat</code></div>
+          <div class="cmd-line"><code>autowifi crack -f pmkid.22000 --backend hashcat</code></div>
+        </div>
+      </div>
+      <div class="cmd-card">
+        <div class="cmd-header">Interface & Session</div>
+        <div class="cmd-body">
+          <div class="cmd-line"><code>sudo autowifi monitor enable -i wlan0</code></div>
+          <div class="cmd-line"><code>sudo autowifi monitor disable -i wlan0mon</code></div>
+          <div class="cmd-line"><code>autowifi session list</code></div>
+          <div class="cmd-line"><code>autowifi session restore abc123</code></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Ready to automate wireless assessments?</h2>
+    <p>Install AutoWIFI and go from zero to cracked keys in minutes.</p>
+    <div class="hero-actions">
+      <a href="https://pypi.org/project/autowifi/" class="btn btn-primary">
+        Install v1.0
+      </a>
+      <a href="https://github.com/momenbasel/AutoWIFI" class="btn btn-secondary">
+        Read the docs
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-links">
+      <a href="https://github.com/momenbasel/AutoWIFI">GitHub</a>
+      <a href="https://pypi.org/project/autowifi/">PyPI</a>
+      <a href="https://github.com/momenbasel/AutoWIFI/issues">Issues</a>
+      <a href="https://github.com/momenbasel/AutoWIFI/blob/main/LICENSE">GPL-3.0 License</a>
+    </div>
+    <p>Built by <a href="https://github.com/momenbasel">Moamen Basel</a></p>
+  </footer>
+
+  <!-- Intersection Observer for animations -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('animate');
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.feature-card, .attacks-table-wrap, .cmd-card, .code-block, .mcp-tools').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(el);
+      });
+
+      const style = document.createElement('style');
+      style.textContent = `.feature-card.animate, .attacks-table-wrap.animate, .cmd-card.animate, .code-block.animate, .mcp-tools.animate { opacity: 1 !important; transform: translateY(0) !important; }`;
+      document.head.appendChild(style);
+
+      document.querySelector('.hero-install')?.addEventListener('click', function() {
+        const copy = this.querySelector('.copy');
+        copy.textContent = 'copied!';
+        setTimeout(() => copy.textContent = 'click to copy', 2000);
+      });
+    });
+  </script>
+</body>
+</html>
