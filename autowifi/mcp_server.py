@@ -1,19 +1,15 @@
 """MCP (Model Context Protocol) server for AutoWIFI.
 
-Exposes wireless pentesting tools to AI coding assistants:
-Claude Code, Codex, Gemini, Cursor, etc.
+Exposes wireless pentesting tools over standard MCP stdio transport,
+usable by any MCP-compatible AI agent client: Claude Code, Codex,
+Gemini, Cursor, etc. See README.md for per-client setup.
 
 Usage:
-  autowifi-mcp              # stdio mode (default for Claude Code / Cursor)
+  autowifi-mcp              # stdio mode
 
-Config for Claude Code (~/.claude/settings.json):
-  {
-    "mcpServers": {
-      "autowifi": {
-        "command": "autowifi-mcp"
-      }
-    }
-  }
+Requires the "mcp" extra (mcp>=1.0,<2.0 - the low-level Server
+decorator API this module uses was removed in mcp 2.x):
+  pip install autowifi[mcp]
 """
 
 import json
@@ -21,7 +17,7 @@ import sys
 from typing import Any
 
 from mcp.server import Server
-from mcp.server.stdio import run_stdio
+from mcp.server.stdio import stdio_server
 from mcp.types import TextContent, Tool
 
 from autowifi import deps
@@ -317,10 +313,15 @@ def _dispatch(name: str, args: dict) -> Any:
     return {"error": f"Unknown tool: {name}"}
 
 
+async def _run_stdio():
+    async with stdio_server() as (read_stream, write_stream):
+        await server.run(read_stream, write_stream, server.create_initialization_options())
+
+
 def main():
     """Entry point for autowifi-mcp command."""
     import asyncio
-    asyncio.run(run_stdio(server))
+    asyncio.run(_run_stdio())
 
 
 if __name__ == "__main__":

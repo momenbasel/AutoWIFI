@@ -95,19 +95,53 @@ AutoWIFI includes an MCP (Model Context Protocol) server, making all wireless pe
 pip install autowifi[mcp]
 ```
 
+### Privileges (required)
+
+Every tool that touches the wireless interface (`list_interfaces`, `enable_monitor`, `scan_networks`, `capture_handshake`, `deauth`, etc.) needs root, same as `sudo autowifi`. But MCP clients launch `autowifi-mcp` as a stdio subprocess with no TTY attached, so plain `sudo` can't prompt for a password there — the process just fails or hangs.
+
+Set up passwordless sudo scoped to the exact `autowifi-mcp` binary path (find it with `which autowifi-mcp`) — **not** a blanket NOPASSWD rule:
+
+```bash
+echo "$USER ALL=(root) NOPASSWD: $(which autowifi-mcp)" > /tmp/autowifi-mcp-sudoers
+sudo visudo -c -f /tmp/autowifi-mcp-sudoers   # validate before installing
+sudo install -m 0440 -o root -g root /tmp/autowifi-mcp-sudoers /etc/sudoers.d/autowifi-mcp
+```
+
+This grants passwordless root execution of a binary that can run deauth attacks and crack captured passwords — scope it to the exact absolute path only, and be aware that whoever can invoke that path non-interactively (e.g. anyone with write access to it) gets that privilege too.
+
+Then point your MCP client at `sudo -n <path>` instead of the bare command — the `-n` makes it fail fast rather than hang if the sudoers rule is ever missing.
+
 ### Configure for Claude Code
 
-Add to `~/.claude/settings.json`:
+```bash
+claude mcp add --scope user autowifi -- sudo -n $(which autowifi-mcp)
+```
+
+Claude Code's auto mode classifier also blocks these tool calls by default even after the server is registered and running as root — `scan_networks` gets denied as a "Third-Party Attack" (a monitor-mode scan necessarily picks up every nearby network's broadcast traffic, not just yours, and the classifier can't tell that apart from recon on someone else's network), and the model **cannot grant itself** the exemption — editing its own permissions is separately blocked as "Self-Modification". You have to add the allowlist yourself, in `~/.claude/settings.json`:
 
 ```json
 {
-  "mcpServers": {
-    "autowifi": {
-      "command": "autowifi-mcp"
-    }
+  "permissions": {
+    "allow": [
+      "mcp__autowifi__list_interfaces",
+      "mcp__autowifi__check_dependencies",
+      "mcp__autowifi__enable_monitor",
+      "mcp__autowifi__disable_monitor",
+      "mcp__autowifi__scan_networks",
+      "mcp__autowifi__get_recommended_attacks",
+      "mcp__autowifi__capture_handshake",
+      "mcp__autowifi__capture_pmkid",
+      "mcp__autowifi__wps_pixie_dust",
+      "mcp__autowifi__deauth",
+      "mcp__autowifi__crack_handshake",
+      "mcp__autowifi__verify_handshake",
+      "mcp__autowifi__find_wordlists"
+    ]
   }
 }
 ```
+
+(Merge this into your existing settings.json rather than replacing it wholesale.) This is Claude Code-specific — the other clients below don't have this classifier layer.
 
 ### Configure for Cursor
 
@@ -117,7 +151,8 @@ Add to `.cursor/mcp.json`:
 {
   "mcpServers": {
     "autowifi": {
-      "command": "autowifi-mcp"
+      "command": "sudo",
+      "args": ["-n", "/path/to/autowifi-mcp"]
     }
   }
 }
