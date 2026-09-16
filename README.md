@@ -97,16 +97,8 @@ pip install autowifi[mcp]
 
 ### Configure for Claude Code
 
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "mcpServers": {
-    "autowifi": {
-      "command": "autowifi-mcp"
-    }
-  }
-}
+```bash
+claude mcp add --scope user autowifi -- autowifi-mcp
 ```
 
 ### Configure for Cursor
