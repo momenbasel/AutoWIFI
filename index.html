@@ -8,13 +8,13 @@
   <meta name="keywords" content="wifi hacking, wireless security testing, aircrack-ng automation, wpa2 cracking, pmkid attack, wep cracking, wps pixie dust, penetration testing, wireless pentesting, handshake capture, deauth attack, hashcat wifi, kali linux tools, wifi security audit, wireless attack framework, python security tool, mcp server, wifi recon, monitor mode, mac randomization">
   <meta name="author" content="Moamen Basel">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://momenbasel.github.io/AutoWIFI/">
+  <link rel="canonical" href="https://www.moamenbasel.com/AutoWIFI/">
 
   <!-- Open Graph -->
   <meta property="og:title" content="AutoWIFI - Wireless Penetration Testing Framework">
   <meta property="og:description" content="Automate WPA/WPA2/WEP/WPS attacks from recon to exploitation. 7 attack vectors, 3 cracking backends, one command.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://momenbasel.github.io/AutoWIFI/">
+  <meta property="og:url" content="https://www.moamenbasel.com/AutoWIFI/">
   <meta property="og:image" content="https://raw.githubusercontent.com/momenbasel/AutoWIFI/main/docs/social-preview.png">
 
   <!-- Twitter Card -->
@@ -36,9 +36,9 @@
     "operatingSystem": "Linux",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "description": "Wireless penetration testing framework. Automates WPA/WPA2/WEP/WPS attacks from reconnaissance to exploitation in one command with aircrack-ng, hashcat, and PMKID support.",
-    "url": "https://momenbasel.github.io/AutoWIFI/",
+    "url": "https://www.moamenbasel.com/AutoWIFI/",
     "downloadUrl": "https://pypi.org/project/autowifi/",
-    "softwareVersion": "1.0",
+    "softwareVersion": "2.0.0",
     "author": { "@type": "Person", "name": "Moamen Basel", "url": "https://github.com/momenbasel" },
     "license": "https://opensource.org/licenses/GPL-3.0",
     "programmingLanguage": "Python"
@@ -221,57 +221,6 @@
       padding-left: 12px;
       border-left: 1px solid var(--border);
     }
-
-    /* ---- TERMINAL DEMO ---- */
-    .terminal-section {
-      padding: 0 2rem 100px;
-    }
-    .terminal {
-      max-width: 780px;
-      margin: 0 auto;
-      background: #0c0c0c;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
-    }
-    .terminal-bar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px 16px;
-      background: #161616;
-      border-bottom: 1px solid #222;
-    }
-    .terminal-dot {
-      width: 12px; height: 12px; border-radius: 50%;
-    }
-    .terminal-dot.r { background: #ff5f57; }
-    .terminal-dot.y { background: #febc2e; }
-    .terminal-dot.g { background: #28c840; }
-    .terminal-title {
-      flex: 1; text-align: center;
-      color: #666; font-size: 0.8rem; font-weight: 500;
-    }
-    .terminal-body {
-      padding: 20px 24px;
-      font-size: 0.85rem;
-      line-height: 1.8;
-      overflow-x: auto;
-    }
-    .terminal-body .line { white-space: pre; }
-    .t-prompt { color: var(--green); }
-    .t-cmd { color: #fff; }
-    .t-flag { color: var(--purple); }
-    .t-val { color: var(--yellow); }
-    .t-dim { color: #555; }
-    .t-info { color: var(--accent); }
-    .t-success { color: var(--green); }
-    .t-label { color: var(--text-muted); }
-    .t-warn { color: var(--red); }
-    .t-header { color: var(--accent); font-weight: 700; }
-    .t-sep { color: #333; }
-    .t-signal-high { color: var(--green); }
-    .t-signal-med { color: var(--yellow); }
-    .t-signal-low { color: var(--red); }
 
     /* ---- SECTIONS ---- */
     section {
@@ -570,18 +519,84 @@
     .animate.d2 { animation-delay: 0.2s; }
     .animate.d3 { animation-delay: 0.3s; }
     .animate.d4 { animation-delay: 0.4s; }
+
+    [hidden] { display: none !important; }
+    :root { --text-muted: #a1aec1; }
+    html { scroll-padding-top: 90px; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+    .skip-link { position: fixed; top: -80px; left: 16px; padding: 12px 18px; background: var(--bg-card); z-index: 200; }
+    .skip-link:focus { top: 12px; }
+    .menu-toggle { display: none; font: inherit; color: var(--text); background: var(--bg-card); border: 1px solid var(--border); padding: 9px 14px; border-radius: 8px; }
+    .nav-links .btn-sm, .btn-primary, .btn-primary:hover { color: #10151c; }
+    .hero { min-height: auto; padding: 144px 2rem 80px; max-width: 1200px; margin: auto; justify-content: space-between; gap: 64px; }
+    .hero::before, .hero::after, .cta::before { display: none; }
+    .hero-content { text-align: left; max-width: 720px; }
+    .hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); }
+    .hero h1 .gradient { background: none; color: var(--accent); -webkit-text-fill-color: currentColor; }
+    .hero p { margin: 0 0 2rem; max-width: 560px; }
+    .hero .hero-actions { justify-content: flex-start; }
+    .hero-art { width: 180px; height: 180px; object-fit: contain; border-radius: 32px; }
+    .hero-badge { margin-bottom: 1.25rem; }
+    .hero-install { margin-top: 1.25rem; color: var(--text); font: inherit; text-align: left; max-width: 100%; }
+    .hero-install code { overflow-wrap: anywhere; min-width: 0; }
+    .hero-content { min-width: 0; }
+    .copy-status { min-height: 1.8em; margin-top: 8px; color: var(--text-dim); font-size: .9rem; }
+    .quick-start { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; margin-top: 2rem; }
+    .setup-grid > div { min-width: 0; }
+    .mcp-block > * { min-width: 0; }
+    .setup-grid h3 { margin-bottom: .8rem; }
+    .setup-grid ul { padding-left: 1.25rem; color: var(--text-dim); }
+    .setup-grid li { margin: .4rem 0; }
+    .setup-grid pre { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; padding: 22px; overflow: auto; font-size: .9rem; line-height: 1.8; }
+    .setup-grid p { color: var(--text-dim); margin-top: 1rem; }
+    .code-body, .cmd-body, .mcp-tools { min-width: 0; overflow-x: auto; }
+    .feature-card, .cmd-card, .code-block { min-width: 0; }
+    .feature-card { box-shadow: none; }
+    .btn { white-space: nowrap; }
+    .animate { opacity: 1; animation: none; }
+    @media (max-width: 900px) {
+      nav { padding: 0 1.25rem; }
+      .menu-toggle { display: block; cursor: pointer; }
+      .nav-inner { position: relative; }
+      .nav-links { display: none; position: absolute; top: 64px; left: -1.25rem; right: -1.25rem; padding: 18px 1.25rem; background: var(--bg-card); border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px 24px; }
+      .nav-links.is-open { display: flex; }
+      .nav-links a:not(.btn-sm) { display: block; padding: 8px 0; }
+      .hero { padding: 112px 1.25rem 56px; gap: 24px; }
+      .hero-art { width: 120px; height: 120px; }
+    }
+    @media (max-width: 600px) {
+      .hero-art { display: none; }
+      .setup-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-install { padding: 14px; gap: 8px; }
+      .hero-install .copy { padding-left: 8px; white-space: nowrap; }
+      .stats-row { flex-wrap: wrap; gap: 24px; }
+      .stat { flex: 1 1 40%; }
+      .hero-actions { gap: 12px; }
+      .btn { padding: 12px 20px; }
+      .mcp-tools table { font-size: .8rem; }
+      .footer-links { flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
   </style>
+<noscript><style>@media (max-width: 900px) { nav { position: static; } .nav-inner { height: auto; min-height: 64px; flex-wrap: wrap; } .nav-links { display: flex; position: static; padding: 12px 0; border: 0; } .hero { padding-top: 56px; } }</style></noscript>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- NAV -->
-  <nav>
+  <nav aria-label="Main navigation">
     <div class="nav-inner">
       <a href="#" class="nav-logo">
         <img src="https://raw.githubusercontent.com/momenbasel/AutoWIFI/main/docs/logo.png" alt="AutoWIFI">
         AutoWIFI
       </a>
-      <div class="nav-links">
+      <button class="menu-toggle" hidden type="button" aria-expanded="false" aria-controls="navigation">Menu</button>
+      <div class="nav-links" id="navigation">
+        <a href="#install">Install</a>
         <a href="#features">Features</a>
         <a href="#attacks">Attacks</a>
         <a href="#mcp">MCP</a>
@@ -595,18 +610,18 @@
   </nav>
 
   <!-- HERO -->
+  <main id="main" tabindex="-1">
   <section class="hero">
     <div class="hero-content">
       <div class="hero-badge animate">
-        <span>v1.0</span> Full wireless attack chain
+        <span>v2.0.0</span> Open-source wireless testing
       </div>
       <h1 class="animate d1">
         Wireless pentesting,<br>
         <span class="gradient">automated.</span>
       </h1>
       <p class="animate d2">
-        WPA/WPA2, WEP, and WPS attacks from reconnaissance to cracking
-        in one command. Smart target selection, GPU acceleration, session recovery.
+        Scan networks, capture handshakes, and audit wireless security with one Linux toolkit.
       </p>
       <div class="hero-actions animate d3">
         <a href="https://pypi.org/project/autowifi/" class="btn btn-primary">
@@ -618,46 +633,28 @@
           View Source
         </a>
       </div>
-      <div class="hero-install animate d4" onclick="navigator.clipboard.writeText('pip install autowifi');" title="Click to copy">
+      <button class="hero-install" hidden type="button" aria-label="Copy install command">
         <span class="prompt">$</span>
         <code>pip install autowifi</code>
-        <span class="copy">click to copy</span>
-      </div>
+        <span class="copy">Copy</span>
+      </button>
+      <div class="copy-status" role="status" aria-live="polite"></div>
+    </div>
+    <img class="hero-art" src="https://raw.githubusercontent.com/momenbasel/AutoWIFI/main/docs/logo.png" alt="" width="180" height="180">
+  </section>
+
+  <section id="install" class="quick-start">
+    <h2 class="section-title">Set up your testing environment</h2>
+    <p class="section-desc">AutoWIFI 2.0.0 requires Linux, Python 3.9+, and compatible wireless hardware.</p>
+    <div class="setup-grid">
+      <div><h3>Before you start</h3><ul><li>A wireless adapter with monitor mode support.</li><li>The aircrack-ng suite installed through your distribution.</li><li>Optional tools such as hashcat and hcxdumptool for additional workflows.</li></ul><p><a href="https://github.com/momenbasel/AutoWIFI#install-system-dependencies">System dependency instructions</a></p></div>
+      <div><h3>Install and verify</h3><pre><code>pip install autowifi
+sudo autowifi --version</code></pre><p>For MCP support, install <code>"autowifi[mcp]"</code>. <a href="https://github.com/momenbasel/AutoWIFI#usage">Open the usage guide</a>.</p></div>
     </div>
   </section>
 
-  <!-- TERMINAL DEMO -->
-  <div class="terminal-section">
-    <div class="terminal animate">
-      <div class="terminal-bar">
-        <div class="terminal-dot r"></div>
-        <div class="terminal-dot y"></div>
-        <div class="terminal-dot g"></div>
-        <div class="terminal-title">autowifi -- scan</div>
-      </div>
-      <div class="terminal-body">
-        <div class="line"><span class="t-prompt">#</span> <span class="t-cmd">sudo autowifi scan</span> <span class="t-flag">-i</span> <span class="t-val">wlan0mon</span> <span class="t-flag">-d</span> <span class="t-val">30</span></div>
-        <div class="line">&nbsp;</div>
-        <div class="line"><span class="t-info">[*]</span> <span class="t-dim">Starting scan on wlan0mon (30s)...</span></div>
-        <div class="line"><span class="t-info">[*]</span> <span class="t-dim">Channels: 1-13 (2.4 GHz) + 36-165 (5 GHz)</span></div>
-        <div class="line">&nbsp;</div>
-        <div class="line"><span class="t-header">  BSSID              CH  ENC       SIGNAL  ESSID</span></div>
-        <div class="line"><span class="t-sep">  ---------------------------------------------------------------------------</span></div>
-        <div class="line">  <span class="t-dim">A4:CF:12:8B:3E:01</span>   6  <span class="t-val">WPA2</span>      <span class="t-signal-high">||||||||</span><span class="t-dim">||</span>  <span class="t-cmd">CorpNet-5G</span></div>
-        <div class="line">  <span class="t-dim">00:1A:2B:3C:4D:5E</span>  11  <span class="t-val">WPA2</span>      <span class="t-signal-med">||||||</span><span class="t-dim">||||</span>  <span class="t-cmd">HomeRouter-2F</span></div>
-        <div class="line">  <span class="t-dim">F8:E4:3B:7A:22:10</span>   1  <span class="t-warn">WEP</span>       <span class="t-signal-med">|||||</span><span class="t-dim">|||||</span>  <span class="t-cmd">Legacy-Printer</span></div>
-        <div class="line">  <span class="t-dim">B0:6E:BF:44:A1:CC</span>   3  <span class="t-val">WPA2</span>/<span class="t-yellow">WPS</span>  <span class="t-signal-low">|||</span><span class="t-dim">|||||||</span>  <span class="t-cmd">CafeWiFi</span></div>
-        <div class="line">  <span class="t-dim">DC:9F:DB:11:F0:8A</span>  44  <span class="t-val">WPA2</span>      <span class="t-signal-high">|||||||||</span><span class="t-dim">|</span>  <span class="t-cmd">Lab-Secure</span></div>
-        <div class="line">&nbsp;</div>
-        <div class="line"><span class="t-success">[+]</span> <span class="t-cmd">Found 5 networks</span> <span class="t-dim">(3 WPA2, 1 WEP, 1 WPS)</span></div>
-        <div class="line"><span class="t-success">[+]</span> <span class="t-dim">Recommended: PMKID attack on CorpNet-5G (strong signal, WPA2)</span></div>
-      </div>
-    </div>
-  </div>
-
   <!-- FEATURES -->
   <section id="features">
-    <div class="section-label">Features</div>
     <h2 class="section-title">Full attack chain in one toolkit</h2>
     <p class="section-desc">From interface setup to cracked keys. Every step automated, every result logged.</p>
     <div class="features-grid">
@@ -727,7 +724,6 @@
 
   <!-- ATTACK VECTORS -->
   <section id="attacks">
-    <div class="section-label">Attack Vectors</div>
     <h2 class="section-title">Seven attack paths, one framework</h2>
     <p class="section-desc">Covers WEP, WPA/WPA2, and WPS with multiple techniques per encryption type.</p>
     <div class="attacks-table-wrap">
@@ -778,7 +774,6 @@
 
   <!-- MCP -->
   <section id="mcp">
-    <div class="section-label">AI Integration</div>
     <h2 class="section-title">MCP Server for AI agents</h2>
     <p class="section-desc">Let Claude, Cursor, or any MCP-compatible agent run wireless assessments autonomously with 13 built-in tools.</p>
     <div class="mcp-block">
@@ -828,7 +823,6 @@
 
   <!-- CLI USAGE -->
   <section id="usage">
-    <div class="section-label">CLI Usage</div>
     <h2 class="section-title">Command reference</h2>
     <p class="section-desc">Scan, capture, and crack - each step is a single command with sensible defaults.</p>
     <div class="commands-grid">
@@ -871,10 +865,10 @@
   <!-- CTA -->
   <section class="cta">
     <h2>Ready to automate wireless assessments?</h2>
-    <p>Install AutoWIFI and go from zero to cracked keys in minutes.</p>
+    <p>Check your adapter and install the required system tools before your first assessment.</p>
     <div class="hero-actions">
       <a href="https://pypi.org/project/autowifi/" class="btn btn-primary">
-        Install v1.0
+        Install from PyPI
       </a>
       <a href="https://github.com/momenbasel/AutoWIFI" class="btn btn-secondary">
         Read the docs
@@ -883,6 +877,7 @@
   </section>
 
   <!-- FOOTER -->
+  </main>
   <footer>
     <div class="footer-links">
       <a href="https://github.com/momenbasel/AutoWIFI">GitHub</a>
@@ -893,34 +888,37 @@
     <p>Built by <a href="https://github.com/momenbasel">Moamen Basel</a></p>
   </footer>
 
-  <!-- Intersection Observer for animations -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.classList.add('animate');
-            observer.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.1 });
-
-      document.querySelectorAll('.feature-card, .attacks-table-wrap, .cmd-card, .code-block, .mcp-tools').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        observer.observe(el);
-      });
-
-      const style = document.createElement('style');
-      style.textContent = `.feature-card.animate, .attacks-table-wrap.animate, .cmd-card.animate, .code-block.animate, .mcp-tools.animate { opacity: 1 !important; transform: translateY(0) !important; }`;
-      document.head.appendChild(style);
-
-      document.querySelector('.hero-install')?.addEventListener('click', function() {
-        const copy = this.querySelector('.copy');
-        copy.textContent = 'copied!';
-        setTimeout(() => copy.textContent = 'click to copy', 2000);
-      });
+    const menu = document.querySelector('.menu-toggle');
+    const navigation = document.querySelector('.nav-links');
+    menu.hidden = false;
+    document.querySelector('.hero-install').hidden = false;
+    menu.addEventListener('click', () => {
+      const expanded = menu.getAttribute('aria-expanded') !== 'true';
+      menu.setAttribute('aria-expanded', String(expanded));
+      navigation.classList.toggle('is-open', expanded);
+    });
+    navigation.addEventListener('click', (event) => {
+      if (event.target.closest('a')) {
+        menu.setAttribute('aria-expanded', 'false');
+        navigation.classList.remove('is-open');
+      }
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.getAttribute('aria-expanded') === 'true') {
+        menu.setAttribute('aria-expanded', 'false');
+        navigation.classList.remove('is-open');
+        menu.focus();
+      }
+    });
+    document.querySelector('.hero-install').addEventListener('click', async function() {
+      const status = document.querySelector('.copy-status');
+      try {
+        await navigator.clipboard.writeText(this.querySelector('code').textContent);
+        status.textContent = 'Install command copied.';
+      } catch (error) {
+        status.textContent = 'Copy unavailable. Select and copy the command above.';
+      }
     });
   </script>
 </body>
